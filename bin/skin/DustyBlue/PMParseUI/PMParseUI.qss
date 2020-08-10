@@ -1,0 +1,119 @@
+QLabel#msgLabel{
+	background-color:rgb(188,63,63);
+	padding-left:40px;
+	padding-right:40px;
+}
+
+QPushButton#readBtn{	
+    outline: none;
+    background-position: center;
+    background-repeat: none;
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-n.png);
+}
+QPushButton#readBtn:hover{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-h.png);
+}
+QPushButton#readBtn:pressed{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-p.png);
+}
+QPushButton#readBtn:disabled{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-d.png);
+}
+
+QPushButton#clearBtn{	
+    outline: none;
+    background-position: center;
+    background-repeat: none;
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-n.png);
+}
+QPushButton#clearBtn:hover{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-h.png);
+}
+QPushButton#clearBtn:pressed{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-p.png);
+}
+QPushButton#clearBtn:disabled{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-d.png);
+}
+
+QPushButton#statisticsBtn{	
+    outline: none;
+    background-position: center;
+    background-repeat: none;
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-n.png);
+}
+QPushButton#statisticsBtn:hover{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-h.png);
+}
+QPushButton#statisticsBtn:pressed{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-p.png);
+}
+QPushButton#statisticsBtn:disabled{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-d.png);
+}
+
+QPushButton#selectBtn{	
+    outline: none;
+    background-position: center;
+    background-repeat: none;
+	border-image: url(skin/DustyBlue/PMParseUI/parse/search_normal.png);
+}
+QPushButton#selectBtn:hover{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/search_hover.png);
+}
+QPushButton#selectBtn:pressed{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/search_pressed.png);
+}
+QPushButton#selectBtn:disabled{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/search_disabled.png);
+}
+
+DCM--NoticeFrame#LAB_USER[notice=false]{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/user-n.png);
+}
+DCM--NoticeFrame#LAB_USER[notice=true]{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/user-e.png);
+}
+DCM--NoticeFrame#LAB_PASSWORD[notice=false]{
+	border-image:url(skin/DustyBlue/PMParseUI/parse/password-n.png);
+}
+DCM--NoticeFrame#LAB_PASSWORD[notice=true]{
+	border-image:url(skin/DustyBlue/PMParseUI/parse/password-e.png);
+}
+
+DCM--NoticeFrame#LAB_ADDRESS{
+	border-image:url(skin/DustyBlue/PMParseUI/parse/address-n.png);
+}
+DCM--NoticeFrame#LAB_PORT{
+	border-image:url(skin/DustyBlue/PMParseUI/parse/port-n.png);
+}
+
+
+QWidget#wgtMask
+{
+	background-color: rgba(31, 33, 36, 60%);
+	border-top:1px solid #1f2124;
+}
+
+DSGUI--DSLineEdit:focus
+{
+	color:#ffffff;
+}
+DSGUI--DSLineEdit
+{
+	color:#abb2bd;
+}
+DSGUI--DSLineEdit#leUserName
+{
+	font-size:14px;
+}
+DSGUI--DSLineEdit#leUserPwd
+{
+	font-size:12px;
+	font-family:"Microsoft Yahei";
+}
+
+DSGUI--DSPushButton#btnLogin
+{
+	font-size:14px;
+}

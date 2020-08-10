@@ -1,0 +1,31 @@
+QPushButton#statisticsBtn{	
+    outline: none;
+    background-position: center;
+    background-repeat: none;
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-n.png);
+}
+QPushButton#statisticsBtn:hover{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-h.png);
+}
+QPushButton#statisticsBtn:pressed{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-p.png);
+}
+QPushButton#statisticsBtn:disabled{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-d.png);
+}
+
+QPushButton#dataBtn{	
+    outline: none;
+    background-position: center;
+    background-repeat: none;
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-n.png);
+}
+QPushButton#dataBtn:hover{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-h.png);
+}
+QPushButton#dataBtn:pressed{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-p.png);
+}
+QPushButton#dataBtn:disabled{
+	border-image: url(skin/DustyBlue/PMParseUI/parse/btn-d.png);
+}
