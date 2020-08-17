@@ -3,6 +3,8 @@
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QDateTimeAxis>
 #include <QDateTime>
+#include <QtWidgets/QCompleter>
+#include <QStringList>
 #include "ui/PMShowUI.hpp"
 #include "GeneratedFiles/ui_PMShowUI.hpp"
 #include "App/DataManagement.hpp"
@@ -50,6 +52,14 @@ namespace ui
         series_->setPointLabelsClipping(false);
         series_->setPointLabelsFormat(QStringLiteral("(@yPoint)"));
  
+        seriesB_ = std::make_unique<QtCharts::QLineSeries>();
+        seriesB_->setPen(QPen(Qt::blue, 1, Qt::SolidLine));
+        seriesB_->setVisible(true);
+        seriesB_->setPointsVisible(true);
+        seriesB_->setPointLabelsVisible(true);
+        seriesB_->setPointLabelsClipping(false);
+        seriesB_->setPointLabelsFormat(QStringLiteral("(@yPoint)"));
+
         chart_ = std::make_unique<QtCharts::QChart>();
         chart_->legend()->hide();
         chart_->setAnimationOptions(QtCharts::QChart::SeriesAnimations);
@@ -73,6 +83,9 @@ namespace ui
         chart_->addSeries(series_.get());
         series_->attachAxis(axisY_.get());
         series_->attachAxis(axisX_.get());
+        chart_->addSeries(seriesB_.get());
+        seriesB_->attachAxis(axisY_.get());
+        seriesB_->attachAxis(axisX_.get());
 
         ui_->counterView->setChart(chart_.get());
         ui_->counterView->setRenderHint(QPainter::Antialiasing);
@@ -81,44 +94,43 @@ namespace ui
 
     void PMShowUI::initConnect()
     {
-        connect(ui_->unitComboBox,  SIGNAL(currentTextChanged(const QString &)), this, SLOT(onUnitComboBoxChanged(const QString &)));
-        connect(ui_->statisticsBtn, SIGNAL(clicked()),                           this, SLOT(onStatisticsShow()));
-        connect(ui_->dataBtn,       SIGNAL(clicked()),                           this, SLOT(onDatasWidget()));
+        connect(ui_->unitComboBox,   SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onUnitComboBoxChanged(const QString &)));
+        connect(ui_->statisticsBtn,  SIGNAL(clicked()),                            this, SLOT(onStatisticsShow()));
+        connect(ui_->statisticsBtnB, SIGNAL(clicked()),                            this, SLOT(onStatisticsShowB()));
+        connect(ui_->dataBtn,        SIGNAL(clicked()),                            this, SLOT(onDatasWidget()));
     }
 
     void PMShowUI::onUnitComboBoxChanged(const QString& unitId)
     {
         ui_->counterComboBox->clear();
+        ui_->counterComboBoxB->clear();
         if (! datas_)
         {
             return;
         }
         const auto& pmDatas = datas_->getPmDatas();
         const auto& targets = pmDatas.getPmTarget(unitId.toStdString());
+//         QCompleter *unitCompleter = new QCompleter(ui_->unitComboBox->model(), this);
+//         ui_->unitComboBox->setCompleter(unitCompleter);
+        if (targets.size() < 1)
+        {
+            return;
+        }
         for (const auto& target : targets)
         {
             for (const auto& counter : target.counters)
             {
                 ui_->counterComboBox->addItem(QString::fromStdString(counter.first));
+                ui_->counterComboBoxB->addItem(QString::fromStdString(counter.first));
             }
         }
         ui_->counterComboBox->setCurrentIndex(FIRST_ITEM);
-    }
+        QCompleter *counterCompleter = new QCompleter(ui_->counterComboBox->model(), this);
+        ui_->counterComboBox->setCompleter(counterCompleter);
 
-    void PMShowUI::onPmParseDataChanged()
-    {
-        ui_->unitComboBox->clear();
-        if (!datas_)
-        {
-            return;
-        }
-        const auto& pmDatas = datas_->getPmDatas();
-        const auto& unitIds = pmDatas.getAllPmTargetUnits();
-        for (const auto& unitId : unitIds)
-        {
-            ui_->unitComboBox->addItem(QString::fromStdString(unitId));
-        }
-        ui_->unitComboBox->setCurrentIndex(FIRST_ITEM);
+        ui_->counterComboBoxB->setCurrentIndex(FIRST_ITEM);
+        QCompleter *counterCompleterB = new QCompleter(ui_->counterComboBoxB->model(), this);
+        ui_->counterComboBoxB->setCompleter(counterCompleterB);
     }
 
     void PMShowUI::onStatisticsShow()
@@ -181,6 +193,49 @@ namespace ui
         }
     }
 
+    void PMShowUI::onStatisticsShowB()
+    {
+        const std::string unitId = ui_->unitComboBox->currentText().toStdString();
+        const std::string counter = ui_->counterComboBoxB->currentText().toStdString();
+        seriesB_->removePoints(0, seriesB_->count());
+        std::string title = "PM Counter: " + counter;
+
+        if (counterAlgorithm_)
+        {
+            const auto& counterValues = counterAlgorithm_->getCounterValues(unitId, counter);
+            if (counterValues.size() > 0)
+            {
+                uint valueMin = 0;
+                uint valueMax = 10;
+                for (const auto& counterValue : counterValues)
+                {
+                    std::string strTime = "";
+                    std::size_t posT = counterValue.first.find('T');
+                    if (std::string::npos != posT)
+                    {
+                        strTime = counterValue.first.substr(0, posT);
+                        strTime += " ";
+                    }
+                    std::size_t posZ = counterValue.first.find('.');
+                    strTime += counterValue.first.substr(posT + 1, posZ - posT - 1);
+                    QDateTime dataTime = QDateTime::fromString(QString::fromStdString(strTime), "yyyy-MM-dd hh:mm:ss");
+
+                    axisY_->setMax(valueMax);
+                    axisY_->setMin(valueMin);
+                    uint value = QString::fromStdString(counterValue.second).toInt();
+                    if (value > valueMax)
+                    {
+                        axisY_->setMax(value + 1);
+                        valueMax = value;
+                    }
+                    seriesB_->append(dataTime.toMSecsSinceEpoch(), value);
+                }
+                seriesB_->show();
+                series_->show();
+            }
+        }
+    }
+
     void PMShowUI::onDatasWidget()
     {
         emit sgnalDatas();
@@ -198,6 +253,8 @@ namespace ui
             ui_->unitComboBox->addItem(QString::fromStdString(unitId));
         }
         ui_->unitComboBox->setCurrentIndex(FIRST_ITEM);
+        QCompleter *unitCompleter = new QCompleter(ui_->unitComboBox->model(), this);
+        ui_->unitComboBox->setCompleter(unitCompleter);
         counterAlgorithm_ = std::make_unique<algorithm::ShowCountersAlgorithm>(datas);
     }
 

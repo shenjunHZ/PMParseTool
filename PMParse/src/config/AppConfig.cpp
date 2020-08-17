@@ -12,6 +12,7 @@
 #include "MessageBox/MessageBox.h"
 #include "DSGuiGlobalData.h"
 #include "libdsl/DPrintLog.h"
+#include "Logger/Logger.hpp"
 
 namespace config
 {
@@ -24,6 +25,7 @@ AppConfig::AppConfig(QApplication& app)
     QDir::setCurrent(strCurPath);
     DSGUI::DSDir::SetCurrentPath(strCurPath);
     //set app
+    LOG_INFO_MSG(logger::getLogger(), "Start pm parse app.");
     app.setWindowIcon(QIcon("./robot.ico"));
     app.setOrganizationName(QString("PM Data Parser"));
     app.setApplicationName(QString("PM Data Parser"));

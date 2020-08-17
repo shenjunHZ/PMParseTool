@@ -23,10 +23,14 @@ namespace ui
 
     void WaitingWidget::startWaiting()
     {
+        if (timer_->isActive())
+        {
+            timer_->stop();
+        }
+
         label_->setGeometry(this->rect());
         label_->show();
         movie_->start();
-
         if (secTime_ > 0)
         {
             timer_->start(secTime_ * 1000);

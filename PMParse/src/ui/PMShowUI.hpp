@@ -41,10 +41,10 @@ private:
 
 private slots:
     void onUnitComboBoxChanged(const QString& unitId);
-    void onPmParseDataChanged();
     void onStatisticsShow();
     void onDatasWidget();
     void onDatasChange(const App::IDataManagement& datas);
+    void onStatisticsShowB();
 
 signals:
     void sgnalDatas();
@@ -53,6 +53,7 @@ private:
     std::unique_ptr<algorithm::IShowCountersAlgorithm> counterAlgorithm_;
     std::unique_ptr<Ui::PMShowUI> ui_{ nullptr };
     std::unique_ptr<QtCharts::QLineSeries> series_{ nullptr };
+    std::unique_ptr<QtCharts::QLineSeries> seriesB_{ nullptr };
     std::unique_ptr<QtCharts::QChart> chart_{ nullptr };
     boost::optional<const App::IDataManagement&> datas_{boost::none};
     std::unique_ptr<QtCharts::QValueAxis> axisY_{ nullptr };

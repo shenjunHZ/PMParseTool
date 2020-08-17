@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <thread>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QLabel>
 
@@ -39,10 +40,12 @@ private slots:
     void onClearDir();
     void onReadData();
     void onStatisticWidget();
+    void onParseDatas();
 
 signals:
     void sgnalStatistic();
     void sgnalDatasChange(const App::IDataManagement& datas);
+    void sgnParseDatas();
 
 private:
     std::unique_ptr<Ui::PMParseUI> ui_{ nullptr };
@@ -50,6 +53,7 @@ private:
     std::unique_ptr<WaitingWidget> waitingWidget_{ nullptr };
     QLabel* m_msgLabel{ nullptr };
     std::string lastPath_;
+    std::unique_ptr<std::thread> parseThread_{ nullptr };
 };
 
 } // namespace ui

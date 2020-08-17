@@ -1,4 +1,5 @@
 #include <boost/property_tree/xml_parser.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include "DataManagement.hpp"
 #include "FileRead/XMLFileReader.hpp"
 #include "FileRead/XMLFileParser.hpp"
@@ -44,11 +45,14 @@ namespace App
     bool DataManagement::parseXmlFile(const std::string& fileName)
     {
         ptree pmTree;
+        std::string startPosixTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
         if (! fileParser_->parseFile(fileName, pmTree))
         {
             LOG_ERROR_MSG("Parse xml file: {} failed.", fileName);
             return false;
         }
+        std::string endPosixTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
+        LOG_DEBUG_MSG("Parse xml file: {}, start time: {}, end time: {}.", fileName, startPosixTime, endPosixTime);
         auto pmData = fileParser_->getData(pmTree);
         const std::string firstNodeValue = "PMSetup";
         for (const ptree::value_type& valueNode : pmData)

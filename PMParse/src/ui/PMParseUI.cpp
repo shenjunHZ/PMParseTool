@@ -7,13 +7,13 @@
 
 namespace
 {
-constexpr int TIMEOUT_WIDGET = 10 * 60;
+constexpr int TIMEOUT_WIDGET = 1 * 60 * 60;
 } // namespace
 namespace ui
 {
 PMParseUI::PMParseUI(QWidget *parent /*= Q_NULLPTR*/)
     : QWidget(parent, Qt::FramelessWindowHint)
-    , waitingWidget_{std::make_unique<WaitingWidget>(this)}
+    , waitingWidget_{ std::make_unique<WaitingWidget>(this) }
 {
     initDialog();
     initConnect();
@@ -43,6 +43,7 @@ void PMParseUI::initConnect()
     connect(ui_->selectBtn,     SIGNAL(clicked()), this, SLOT(onSelectDir()));
     connect(ui_->clearBtn,      SIGNAL(clicked()), this, SLOT(onClearDir()));
     connect(ui_->readBtn,       SIGNAL(clicked()), this, SLOT(onReadData()));
+    connect(this,               SIGNAL(sgnParseDatas()), this, SLOT(onParseDatas()));
     connect(ui_->statisticsBtn, SIGNAL(clicked()), this, SLOT(onStatisticWidget()));
 }
 
@@ -74,21 +75,34 @@ void PMParseUI::onClearDir()
 
 void PMParseUI::onReadData()
 {
+    parseThread_ = std::make_unique<std::thread>( [this]()
+        {
+            QString currentDir = ui_->comboBox->currentText();
+            dataManagement_ = std::make_unique<App::DataManagement>(currentDir.toStdString());
+            emit sgnParseDatas();
+            ui_->statisticsBtn->setDisabled(false);
+        });
+
     int x = (this->width() - waitingWidget_->width()) / 2;
     int y = (this->height() - waitingWidget_->height()) / 2;
     waitingWidget_->move(x, y);
     waitingWidget_->startWaiting();
-    
-    QString currentDir = ui_->comboBox->currentText();
-    dataManagement_ = std::make_unique<App::DataManagement>(currentDir.toStdString());
-    waitingWidget_->stopWaiting();
-    emit sgnalDatasChange(*dataManagement_);
-    ui_->statisticsBtn->setDisabled(false);
 }
 
 void PMParseUI::onStatisticWidget()
 {
     emit sgnalStatistic();
+}
+
+void PMParseUI::onParseDatas()
+{
+    emit sgnalDatasChange(*dataManagement_);
+    if(parseThread_->joinable())
+    {
+        parseThread_->join();
+    }
+
+    waitingWidget_->stopWaiting();
 }
 
 void PMParseUI::setErrorMsg(const QString& tipMsg)
