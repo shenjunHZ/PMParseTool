@@ -15,6 +15,7 @@
 namespace
 {
 constexpr int FIRST_ITEM = 0;
+constexpr int MAX_VALUE_OFFSET = 10;
 } // namespace
 namespace ui
 {
@@ -58,7 +59,7 @@ namespace ui
         seriesB_->setPointsVisible(true);
         seriesB_->setPointLabelsVisible(true);
         seriesB_->setPointLabelsClipping(false);
-        seriesB_->setPointLabelsFormat(QStringLiteral("(@yPoint)"));
+        seriesB_->setPointLabelsFormat(QStringLiteral(" -               (@yPoint)-"));
 
         chart_ = std::make_unique<QtCharts::QChart>();
         chart_->legend()->hide();
@@ -80,9 +81,11 @@ namespace ui
         // chart should add axis before series attach axis
         chart_->addAxis(axisY_.get(), Qt::AlignLeft);
         chart_->addAxis(axisX_.get(), Qt::AlignBottom);
+
         chart_->addSeries(series_.get());
         series_->attachAxis(axisY_.get());
         series_->attachAxis(axisX_.get());
+
         chart_->addSeries(seriesB_.get());
         seriesB_->attachAxis(axisY_.get());
         seriesB_->attachAxis(axisX_.get());
@@ -90,6 +93,8 @@ namespace ui
         ui_->counterView->setChart(chart_.get());
         ui_->counterView->setRenderHint(QPainter::Antialiasing);
         ui_->counterView->setRubberBand(QtCharts::QChartView::HorizontalRubberBand);
+        ui_->counterView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+        ui_->counterView->setResizeAnchor(QGraphicsView::AnchorUnderMouse);
     }
 
     void PMShowUI::initConnect()
@@ -110,8 +115,6 @@ namespace ui
         }
         const auto& pmDatas = datas_->getPmDatas();
         const auto& targets = pmDatas.getPmTarget(unitId.toStdString());
-//         QCompleter *unitCompleter = new QCompleter(ui_->unitComboBox->model(), this);
-//         ui_->unitComboBox->setCompleter(unitCompleter);
         if (targets.size() < 1)
         {
             return;
@@ -150,6 +153,8 @@ namespace ui
                 uint timeMax = 0;
                 uint valueMin = 0;
                 uint valueMax = 10;
+                axisY_->setMin(valueMin);
+                axisY_->setMax(valueMax);
                 for (const auto& counterValue : counterValues)
                 {
                     std::string strTime = "";
@@ -178,12 +183,10 @@ namespace ui
                         axisX_->setMax(QDateTime::fromTime_t(timeMax));
                     }
 
-                    axisY_->setMax(valueMax);
-                    axisY_->setMin(valueMin);
                     uint value = QString::fromStdString(counterValue.second).toInt();
                     if (value > valueMax)
                     {
-                        axisY_->setMax(value + 1);
+                        axisY_->setMax(value + MAX_VALUE_OFFSET);
                         valueMax = value;
                     }
                     series_->append(dataTime.toMSecsSinceEpoch(), value);
@@ -207,6 +210,8 @@ namespace ui
             {
                 uint valueMin = 0;
                 uint valueMax = 10;
+                axisY_->setMax(valueMax);
+                axisY_->setMin(valueMin);
                 for (const auto& counterValue : counterValues)
                 {
                     std::string strTime = "";
@@ -220,12 +225,10 @@ namespace ui
                     strTime += counterValue.first.substr(posT + 1, posZ - posT - 1);
                     QDateTime dataTime = QDateTime::fromString(QString::fromStdString(strTime), "yyyy-MM-dd hh:mm:ss");
 
-                    axisY_->setMax(valueMax);
-                    axisY_->setMin(valueMin);
                     uint value = QString::fromStdString(counterValue.second).toInt();
                     if (value > valueMax)
                     {
-                        axisY_->setMax(value + 1);
+                        axisY_->setMax(value + MAX_VALUE_OFFSET);
                         valueMax = value;
                     }
                     seriesB_->append(dataTime.toMSecsSinceEpoch(), value);
