@@ -21,6 +21,7 @@ namespace ui
 {
     PMShowUI::PMShowUI(QWidget *parent /*= Q_NULLPTR*/)
         : QDialog(parent, Qt::FramelessWindowHint)
+        , title_{""}
     {
         initDialog();
         initConnect();
@@ -38,6 +39,7 @@ namespace ui
         ui_->setupUi(this);
         this->setModal(true);
         this->activateWindow();
+        ui_->statisticsBtnB->setDisabled(true);
 
         initChart();
     }
@@ -52,6 +54,7 @@ namespace ui
         series_->setPointLabelsVisible(true);
         series_->setPointLabelsClipping(false);
         series_->setPointLabelsFormat(QStringLiteral("(@yPoint)"));
+        series_->setPointLabelsColor(QColor(Qt::yellow));
  
         seriesB_ = std::make_unique<QtCharts::QLineSeries>();
         seriesB_->setPen(QPen(Qt::blue, 1, Qt::SolidLine));
@@ -141,8 +144,9 @@ namespace ui
         const std::string unitId = ui_->unitComboBox->currentText().toStdString();
         const std::string counter = ui_->counterComboBox->currentText().toStdString();
         series_->removePoints(0, series_->count());
-        std::string title = "PM Counter: " + counter;
-        chart_->setTitle(QString::fromStdString(title));
+        title_.clear();
+        title_ = "PM Counter: " + counter;
+        chart_->setTitle(QString::fromStdString(title_));
 
         if (counterAlgorithm_)
         {
@@ -192,6 +196,8 @@ namespace ui
                     series_->append(dataTime.toMSecsSinceEpoch(), value);
                 }
                 series_->show();
+                ui_->statisticsBtnB->setDisabled(false);
+                ui_->counterView->update();
             }
         }
     }
@@ -201,7 +207,8 @@ namespace ui
         const std::string unitId = ui_->unitComboBox->currentText().toStdString();
         const std::string counter = ui_->counterComboBoxB->currentText().toStdString();
         seriesB_->removePoints(0, seriesB_->count());
-        std::string title = "PM Counter: " + counter;
+        std::string title = title_ + " : " + counter;
+        chart_->setTitle(QString::fromStdString(title));
 
         if (counterAlgorithm_)
         {
@@ -234,7 +241,7 @@ namespace ui
                     seriesB_->append(dataTime.toMSecsSinceEpoch(), value);
                 }
                 seriesB_->show();
-                series_->show();
+                ui_->counterView->update();
             }
         }
     }

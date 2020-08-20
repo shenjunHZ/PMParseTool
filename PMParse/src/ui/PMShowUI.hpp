@@ -58,5 +58,6 @@ private:
     boost::optional<const App::IDataManagement&> datas_{boost::none};
     std::unique_ptr<QtCharts::QValueAxis> axisY_{ nullptr };
     std::unique_ptr<QtCharts::QDateTimeAxis> axisX_{ nullptr };
+    std::string title_;
 };
 } // namespace ui

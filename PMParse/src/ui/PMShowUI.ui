@@ -44,7 +44,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
+         <width>80</width>
          <height>20</height>
         </size>
        </property>
@@ -60,14 +60,14 @@
      <item>
       <widget class="DSGUI::DSComboBox" name="unitComboBox">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
-         <width>40</width>
+         <width>150</width>
          <height>40</height>
         </size>
        </property>
@@ -109,7 +109,7 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>40</width>
+         <width>150</width>
          <height>40</height>
         </size>
        </property>
@@ -189,7 +189,7 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>40</width>
+         <width>150</width>
          <height>40</height>
         </size>
        </property>

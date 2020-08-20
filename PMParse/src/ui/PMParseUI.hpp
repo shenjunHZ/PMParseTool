@@ -3,6 +3,7 @@
 #include <thread>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QLabel>
+#include <QtGui/QKeyEvent>
 
 namespace Ui
 {
@@ -34,6 +35,7 @@ private:
     void initDialog();
     void initConnect();
     void setErrorMsg(const QString& tipMsg);
+    virtual void keyPressEvent(QKeyEvent *event);
 
 private slots:
     void onSelectDir();
