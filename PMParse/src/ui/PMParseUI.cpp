@@ -36,6 +36,7 @@ void PMParseUI::initDialog()
     m_msgLabel->setObjectName("msgLabel");
     m_msgLabel->hide();
     ui_->statisticsBtn->setDisabled(true);
+    ui_->readBtn->setDisabled(true);
 }
 
 void PMParseUI::initConnect()
@@ -64,6 +65,7 @@ void PMParseUI::onSelectDir()
         ui_->comboBox->setCurrentIndex(ui_->comboBox->findText(directory));
         lastPath_ = directory.toStdString();
         ui_->statisticsBtn->setDisabled(true);
+        ui_->readBtn->setDisabled(false);
     }
 }
 
@@ -117,6 +119,21 @@ void PMParseUI::setErrorMsg(const QString& tipMsg)
         m_msgLabel->setText(tipMsg);
         m_msgLabel->show();
     }
+}
+
+void PMParseUI::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape)
+    {
+        if (parseThread_ && parseThread_->joinable())
+        {
+            parseThread_.reset();
+        }
+        waitingWidget_->stopWaiting();
+        ui_->readBtn->setDisabled(false);
+        return;
+    }
+    QWidget::keyPressEvent(event);
 }
 
 } // namespace ui
