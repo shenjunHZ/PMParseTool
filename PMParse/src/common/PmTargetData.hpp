@@ -22,5 +22,10 @@ struct SPmTarget
             counters.insert(counter);
         }
     }
+    void clearMeasurement()
+    {
+        measurementType = "";
+        counters.clear();
+    }
 };
 } // namespace common

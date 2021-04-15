@@ -105,6 +105,7 @@ namespace App
             const std::string unit = distName.substr(pos + 1);
             pmDatas_->setPmTarget(unit, pmTarget);
         }
+        pmTarget.clearMeasurement();
     }
 
     const db::IPmDatas& DataManagement::getPmDatas() const

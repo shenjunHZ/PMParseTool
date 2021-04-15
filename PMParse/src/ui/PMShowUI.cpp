@@ -15,7 +15,7 @@
 namespace
 {
 constexpr int FIRST_ITEM = 0;
-constexpr int MAX_VALUE_OFFSET = 10;
+constexpr int MAX_VALUE_OFFSET = 5;
 } // namespace
 namespace ui
 {

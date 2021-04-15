@@ -10,7 +10,6 @@ namespace logger
         std::shared_ptr<spdlog::logger> createLogger(const std::string& name, spdlog::level::level_enum level, std::string& filePath)
         {
             const auto& sinks = LoggerConfiguration::instance().getSinks(filePath);
-            // thread_pool() has queue size of 8192 and 1 worker thread
             auto logger = std::make_shared<spdlog::async_logger>(name, sinks.cbegin(), sinks.cend(), spdlog::thread_pool());
             logger->set_level(level);
             logger->set_pattern("[%H:%M:%S.%f][%n][%P][%t][%l] %v");
@@ -21,7 +20,7 @@ namespace logger
 
     spdlog::logger& getLogger(std::string filePath /*= ""*/)
     {
-        static auto logger = createLogger("PMParse-Demo", spdlog::level::trace, filePath);
+        static auto logger = createLogger("PM_Parse_Tool_Log", spdlog::level::trace, filePath);
         return *logger;
     }
 } // namespace logger
