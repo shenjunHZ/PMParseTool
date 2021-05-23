@@ -1,6 +1,6 @@
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "DataManagement.hpp"
+#include "app/DataManagement.hpp"
 #include "FileRead/XMLFileReader.hpp"
 #include "FileRead/XMLFileParser.hpp"
 #include "Logger/Logger.hpp"
@@ -81,20 +81,47 @@ namespace App
         }
     }
 
-    void DataManagement::readPmTargetObject(const boost::property_tree::ptree& node, common::SPmTarget& pmTarget)
+    void DataManagement::readPmTargetObject(const boost::property_tree::ptree& nodes, common::SPmTarget& pmTarget)
     {
-        const std::string distName = fileParser_->getPmDistName(node);
-        pmTarget.measurementType = fileParser_->getPmMeasurementType(node);
-        auto pmCounters = fileParser_->getPmTargetData(node);
-        for (const ptree::value_type& valueNode : pmCounters)
+        const std::string distName = fileParser_->getPmDistName(nodes);
+        std::string measurementTpyeAttr = "NE-WBTS_1.0";
+        for (const auto& node : nodes)
         {
-            const std::string counter = valueNode.first;
-            const std::string value = fileParser_->getXmlAttrValue(valueNode);
-            if (!counter.empty() && !value.empty())
+            if (measurementTpyeAttr == node.first)
             {
-                if (!pmTarget.counters.insert(std::make_pair(counter, value)).second)
+                pmTarget.measurementType = fileParser_->getPmMeasurementTypeForWBTS(node.second); // first second is xmlattr
+
+                for (const auto& meas : node.second)
                 {
-                    LOG_WARNING_MSG("Insert counter failed: {}, {}.", counter, value);
+                    if (std::string::npos == meas.first.find("xmlattr"))
+                    {
+                        const std::string counter = meas.first;
+                        const std::string value = fileParser_->getXmlAttrValue(meas);
+                        if (!counter.empty() && !value.empty())
+                        {
+                            if (!pmTarget.counters.insert(std::make_pair(counter, value)).second)
+                            {
+                                LOG_WARNING_MSG("Insert counter failed: {}, {}.", counter, value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (pmTarget.measurementType.empty())
+        {
+            pmTarget.measurementType = fileParser_->getPmMeasurementTypeForPmTarget(nodes);
+            auto pmCounters = fileParser_->getPmTargetData(nodes);
+            for (const ptree::value_type& valueNode : pmCounters)
+            {
+                const std::string counter = valueNode.first;
+                const std::string value = fileParser_->getXmlAttrValue(valueNode);
+                if (!counter.empty() && !value.empty())
+                {
+                    if (!pmTarget.counters.insert(std::make_pair(counter, value)).second)
+                    {
+                        LOG_WARNING_MSG("Insert counter failed: {}, {}.", counter, value);
+                    }
                 }
             }
         }

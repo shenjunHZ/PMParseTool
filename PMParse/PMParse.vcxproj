@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(Interface)\boost_1_65_1\;$(Interface)\spdlog-1.x\include;$(Interface)\DCMGui;$(Interface)\MyInterface;$(Interface)\qtcharts\include;.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(Interface)\boost_1_65_1\;$(Interface)\spdlog-1.x\include;$(Interface)\DCMGui;$(Interface)\MyInterface;$(Interface)\qtcharts\include;.\src;.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
@@ -136,15 +136,15 @@
     <QtUic Include="src\ui\PMShowUI.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\app\AppDependency.hpp" />
+    <ClInclude Include="include\app\DataManagement.hpp" />
+    <ClInclude Include="include\app\IDataManagement.hpp" />
+    <ClInclude Include="include\common\EPmCounterId.h" />
+    <ClInclude Include="include\common\MeasurementType.hpp" />
+    <ClInclude Include="include\common\PmDatas.hpp" />
+    <ClInclude Include="include\common\PmTargetData.hpp" />
     <ClInclude Include="src\algorithm\IShowCounterAlgorithm.hpp" />
     <ClInclude Include="src\algorithm\ShowCountersAlgorithm.hpp" />
-    <ClInclude Include="src\App\AppDependency.hpp" />
-    <ClInclude Include="src\App\DataManagement.hpp" />
-    <ClInclude Include="src\App\IDataManagement.hpp" />
-    <ClInclude Include="src\common\EPmCounterId.h" />
-    <ClInclude Include="src\common\MeasurementType.hpp" />
-    <ClInclude Include="src\common\PmDatas.hpp" />
-    <ClInclude Include="src\common\PmTargetData.hpp" />
     <ClInclude Include="src\config\AppConfig.hpp" />
     <ClInclude Include="src\config\commonControl.hpp" />
     <ClInclude Include="src\FileRead\IFileParser.hpp" />

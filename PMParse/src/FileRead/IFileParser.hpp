@@ -31,7 +31,8 @@ public:
     virtual std::string getAttrInterval(const boost::property_tree::ptree& pmNode) const = 0;
 
     virtual std::string getPmDistName(const boost::property_tree::ptree& pmNode) const = 0;
-    virtual std::string getPmMeasurementType(const boost::property_tree::ptree& pmNode) const = 0;
+    virtual std::string getPmMeasurementTypeForPmTarget(const boost::property_tree::ptree& pmNode) const = 0;
+    virtual std::string getPmMeasurementTypeForWBTS(const boost::property_tree::ptree& pmNode) const = 0;
 
     virtual const boost::property_tree::ptree& getPmTargetData(const boost::property_tree::ptree& propertyTree) = 0;
     virtual std::string getXmlAttrValue(const boost::property_tree::ptree::value_type& pmNode) const = 0;

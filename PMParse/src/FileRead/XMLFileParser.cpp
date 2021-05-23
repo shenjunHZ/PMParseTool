@@ -80,7 +80,7 @@ namespace FileRead
         }
     }
 
-    std::string XMLFileParser::getPmMeasurementType(const boost::property_tree::ptree& pmNode) const
+    std::string XMLFileParser::getPmMeasurementTypeForPmTarget(const boost::property_tree::ptree& pmNode) const
     {
         const std::string measurementType = "PMTarget.<xmlattr>.measurementType";
         try
@@ -90,6 +90,20 @@ namespace FileRead
         catch (...)
         {
             LOG_ERROR_MSG("Get measurement type failed.");
+            return "";
+        }
+    }
+
+    std::string XMLFileParser::getPmMeasurementTypeForWBTS(const boost::property_tree::ptree& pmNode) const
+    {
+        const std::string measurementType = "<xmlattr>.measurementType";
+        try
+        {
+            return pmNode.get<std::string>(measurementType);
+        }
+        catch (const std::exception& e)
+        {
+            LOG_ERROR_MSG("Get measurement type failed {}.", e.what());
             return "";
         }
     }

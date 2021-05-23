@@ -33,7 +33,7 @@ private:
     void parseAllXmlFiles();
 
     bool parseXmlFile(const std::string& fileName);
-    void readPmTargetObject(const boost::property_tree::ptree& node, common::SPmTarget& pmTarget);
+    void readPmTargetObject(const boost::property_tree::ptree& nodes, common::SPmTarget& pmTarget);
     void readPMMOResultObject(const boost::property_tree::ptree& node);
 
 private:
